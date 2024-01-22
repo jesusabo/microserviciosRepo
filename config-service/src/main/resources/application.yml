@@ -10,3 +10,6 @@ spring:
           default-label: config-server
           search-paths: config-data
           uri: https://github.com/jesusabo/microserviciosRepo
+          username: jesusabo
+          password: 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
+          clone-on-start: true

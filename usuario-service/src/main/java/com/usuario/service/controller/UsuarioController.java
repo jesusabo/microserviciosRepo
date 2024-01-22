@@ -2,6 +2,7 @@ package com.usuario.service.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import com.usuario.service.servicio.UsuarioService;
 @RequestMapping("usuario")
 public class UsuarioController {
 	
+	private static final Logger log = org.slf4j.LoggerFactory.getLogger(UsuarioController.class);
 	
 	@Autowired
 	private UsuarioService usuarioService;
@@ -49,12 +51,13 @@ public class UsuarioController {
 	
 	@GetMapping("/carro/{id}")
 	public ResponseEntity<Carro> obtenerCarroById(@PathVariable int id){
+		log.info("obtenerCarroById");
 		return new ResponseEntity<Carro>(usuarioService.getCarro(id),HttpStatus.OK);
 	}
 	
 	@PostMapping("/carroService/{usuarioId}")
 	public ResponseEntity<Carro> guardarCarro(@PathVariable int usuarioId,@RequestBody Carro carro){
-		Carro nuevoCarro = usuarioService.saveCarro(usuarioId, carro);
+		Carro nuevoCarro = usuarioService.saveCarroExecute(usuarioId, carro);
 		return new ResponseEntity<Carro>(nuevoCarro,HttpStatus.OK);
 	}
 }

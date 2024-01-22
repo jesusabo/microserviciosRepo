@@ -19,5 +19,7 @@ public interface UsuarioService {
 	
 	Carro saveCarro(int idUsuario, Carro carro);
 	
+	Carro saveCarroExecute(int idUsuario,Carro carro);
+	
 
 }
