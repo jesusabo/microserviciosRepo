@@ -7,7 +7,7 @@ spring:
     config:
       server:
         git:
-          default-label: multiple-intancias
+          default-label: gateway
           search-paths: config-data
           uri: https://github.com/jesusabo/microserviciosRepo
           username: jesusabo
