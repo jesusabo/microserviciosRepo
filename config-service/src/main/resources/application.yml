@@ -7,7 +7,7 @@ spring:
     config:
       server:
         git:
-          default-label: config-server
+          default-label: eureka
           search-paths: config-data
           uri: https://github.com/jesusabo/microserviciosRepo
           username: jesusabo
