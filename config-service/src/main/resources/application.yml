@@ -7,6 +7,6 @@ spring:
     config:
       server:
         git:
-          default-label: gateway
+          default-label: circuit-breaker
           search-paths: config-data
           uri: https://github.com/jesusabo/microserviciosRepo
