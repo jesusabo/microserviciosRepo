@@ -59,13 +59,14 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Override
 	public Carro getCarro(int id) {
 		log.info("getCarro");
-		Carro carro =  restTemplate.getForObject("http://localhost:8081/carro/obtener/"+ id, Carro.class);
+		Carro carro =  restTemplate.getForObject("http://localhost:8090/carro/obtener/"+ id, Carro.class);
 //		Carro carro =  restTemplate.getForObject("http://localhost:8081/carro/obtener/{id}", Carro.class,id);
 		return carro;
 	}
 
 	@Override
 	public Carro saveCarro(int usuarioId, Carro carro) {
+		log.info("saveCarro");
 		carro.setUsuarioId(usuarioId);
 		Carro carronuevo = carroFeignClient.save(carro);
 		return carronuevo;
@@ -77,7 +78,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 		carro.setUsuarioId(usuarioId);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		HttpEntity<Carro> httpEntity = new HttpEntity<>(carro,httpHeaders);
-		ResponseEntity<Carro> carroResponse = restTemplate.exchange("http://localhost:8081/carro/guardar", HttpMethod.POST, httpEntity, Carro.class);
+		ResponseEntity<Carro> carroResponse = restTemplate.exchange("http://localhost:8090/carro/guardar", HttpMethod.POST, httpEntity, Carro.class);
 		if(carroResponse.getStatusCode().is2xxSuccessful()) {
 			return carroResponse.getBody(); 
 		}

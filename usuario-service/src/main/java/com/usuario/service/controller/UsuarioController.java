@@ -57,7 +57,7 @@ public class UsuarioController {
 	
 	@PostMapping("/carroService/{usuarioId}")
 	public ResponseEntity<Carro> guardarCarro(@PathVariable int usuarioId,@RequestBody Carro carro){
-		Carro nuevoCarro = usuarioService.saveCarroExecute(usuarioId, carro);
+		Carro nuevoCarro = usuarioService.saveCarro(usuarioId, carro);
 		return new ResponseEntity<Carro>(nuevoCarro,HttpStatus.OK);
 	}
 }
