@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.usuario.service.entity.Usuario;
 import com.usuario.service.modelos.Carro;
+import com.usuario.service.modelos.Moto;
 
 public interface UsuarioService {	
 	
@@ -21,5 +22,10 @@ public interface UsuarioService {
 	
 	Carro saveCarroExecute(int idUsuario,Carro carro);
 	
+	Moto getMoto(int id);
+	
+	Moto saveMoto(Moto moto);
+	
+	List<Moto> getMotos();
 
 }

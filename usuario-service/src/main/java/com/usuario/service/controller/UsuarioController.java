@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.usuario.service.entity.Usuario;
 import com.usuario.service.modelos.Carro;
+import com.usuario.service.modelos.Moto;
 import com.usuario.service.servicio.UsuarioService;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @RestController
 @RequestMapping("usuario")
@@ -49,6 +52,8 @@ public class UsuarioController {
 		return new ResponseEntity<List<Carro>>(usuarioService.getCarros(),HttpStatus.OK);
 	}
 	
+	
+	@CircuitBreaker(name = "carrosCB", fallbackMethod = "fallBackGetCarro")
 	@GetMapping("/carro/{id}")
 	public ResponseEntity<Carro> obtenerCarroById(@PathVariable int id){
 		log.info("obtenerCarroById");
@@ -59,5 +64,15 @@ public class UsuarioController {
 	public ResponseEntity<Carro> guardarCarro(@PathVariable int usuarioId,@RequestBody Carro carro){
 		Carro nuevoCarro = usuarioService.saveCarro(usuarioId, carro);
 		return new ResponseEntity<Carro>(nuevoCarro,HttpStatus.OK);
+	}
+	
+	private ResponseEntity<Carro> fallBackGetCarro(@PathVariable int id, RuntimeException exception){
+		return new ResponseEntity("El usaurio: "+id+" no tiene dinero para los carros", HttpStatus.OK);
+	}
+	
+	@GetMapping("/motos")
+	public ResponseEntity<List<Moto>> obtenerMotos(){
+		log.info("motos");
+		return new ResponseEntity<List<Moto>>(usuarioService.getMotos(),HttpStatus.OK);
 	}
 }

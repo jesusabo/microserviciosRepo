@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import com.usuario.service.entity.Usuario;
 import com.usuario.service.feignClients.CarroFeignClient;
 import com.usuario.service.modelos.Carro;
+import com.usuario.service.modelos.Moto;
 import com.usuario.service.repository.UsuarioRepository;
 import com.usuario.service.servicio.UsuarioService;
 
@@ -51,7 +52,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 	
 	@Override
 	public List<Carro> getCarros() {
-		Carro[] result = restTemplate.getForObject("http://localhost:8081/carro/listar", Carro[].class);
+		Carro[] result = restTemplate.getForObject("http://carro-service/carro/listar", Carro[].class);
 		
 		return Arrays.asList(result);
 	}
@@ -59,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Override
 	public Carro getCarro(int id) {
 		log.info("getCarro");
-		Carro carro =  restTemplate.getForObject("http://localhost:8090/carro/obtener/"+ id, Carro.class);
+		Carro carro =  restTemplate.getForObject("http://carro-service/carro/obtener/"+ id, Carro.class);
 //		Carro carro =  restTemplate.getForObject("http://localhost:8081/carro/obtener/{id}", Carro.class,id);
 		return carro;
 	}
@@ -72,17 +73,42 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return carronuevo;
 	}
 
+
 	@Override
 	public Carro saveCarroExecute(int usuarioId,Carro carro){
 		log.info("saveCarroExecute");
 		carro.setUsuarioId(usuarioId);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		HttpEntity<Carro> httpEntity = new HttpEntity<>(carro,httpHeaders);
-		ResponseEntity<Carro> carroResponse = restTemplate.exchange("http://localhost:8090/carro/guardar", HttpMethod.POST, httpEntity, Carro.class);
+		ResponseEntity<Carro> carroResponse = restTemplate.exchange("http://carro-service/carro/guardar", HttpMethod.POST, httpEntity, Carro.class);
 		if(carroResponse.getStatusCode().is2xxSuccessful()) {
 			return carroResponse.getBody(); 
 		}
 		return null;
+	}
+
+	@Override
+	public Moto getMoto(int id) {
+		Moto moto = restTemplate.getForObject("http://moto-service/moto/obtener/{id}", Moto.class,id);
+		return moto;
+	}
+
+	@Override
+	public Moto saveMoto(Moto moto) {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		HttpEntity<Moto> entity = new HttpEntity<>(moto,httpHeaders);
+		ResponseEntity<Moto> motoResponse = restTemplate.exchange("http://moto-service/moto/guardar", HttpMethod.GET, entity,Moto.class);
+		if(motoResponse.getStatusCode().is2xxSuccessful()) {
+			return motoResponse.getBody();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Moto> getMotos() {
+		log.info("getMotos");
+		Moto[] moto = restTemplate.getForObject("http://moto-service/moto/listar", Moto[].class);
+		return Arrays.asList(moto);
 	}
 
 }
