@@ -7,6 +7,6 @@ spring:
     config:
       server:
         git:
-          default-label: circuit-breaker
+          default-label: zipkin-sleuth
           search-paths: config-data
           uri: https://github.com/jesusabo/microserviciosRepo
