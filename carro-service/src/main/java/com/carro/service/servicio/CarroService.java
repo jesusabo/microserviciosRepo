@@ -6,11 +6,15 @@ import com.carro.service.entity.Carro;
 
 public interface CarroService {
 	
-	Carro save(Carro carro);
+	Carro saveCarro(Carro carro);
 	
 	Carro findById(int id);
 	
-	List<Carro> getAll();
+	List<Carro> getCarroAll();
+	
+	Carro updateCarro(Carro carro);
+	
+	void deleteCarro(int idCarro);
 	
 	
 	

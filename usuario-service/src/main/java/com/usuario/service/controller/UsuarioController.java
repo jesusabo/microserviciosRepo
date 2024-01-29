@@ -2,6 +2,8 @@ package com.usuario.service.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,11 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.usuario.service.dto.Carro;
+import com.usuario.service.dto.Moto;
 import com.usuario.service.entity.Usuario;
-import com.usuario.service.modelos.Carro;
-import com.usuario.service.modelos.Moto;
 import com.usuario.service.servicio.UsuarioService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -31,8 +34,8 @@ public class UsuarioController {
 	
 	
 	@PostMapping("/guardar")
-	public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario){
-		return new ResponseEntity<>(usuarioService.save(usuario),HttpStatus.OK);
+	public ResponseEntity<Usuario> guardarUsuario(@Valid @RequestBody Usuario usuario){
+		return new ResponseEntity<>(usuarioService.saveUsuario(usuario),HttpStatus.OK);
 	}
 	
 	@GetMapping("/obtener/{id}")
@@ -43,8 +46,25 @@ public class UsuarioController {
 	
 	@GetMapping("/listar")
 	public ResponseEntity<List<Usuario>> listarUsuario(){
-		List<Usuario> usuarios = usuarioService.getAll();
+		List<Usuario> usuarios = usuarioService.getUsuarioAll();
+		log.info(usuarios.get(0).getNombre());
 		return new ResponseEntity<List<Usuario>>(usuarios,HttpStatus.OK);
+	}
+	
+	@PostMapping("/actualizar")
+	public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario){
+		return new ResponseEntity<Usuario>(usuarioService.updateUsuario(usuario),HttpStatus.OK);
+	}
+	
+	@GetMapping("/eliminar/{id}")
+	public ResponseEntity<String> eliminiarUsuario(@PathVariable int id){	
+		usuarioService.deleteUsuario(id);
+		return new ResponseEntity<String>("Usuario Eliminado con exito" ,HttpStatus.OK);
+	}
+	
+	@GetMapping("users")
+	public void prueba(@RequestParam(value="valor1" ,defaultValue = "leonor" ,required = false) String valor1) {
+		log.info("El valor recibido es: "+valor1);
 	}
 	
 	@GetMapping("/carros")
@@ -53,7 +73,7 @@ public class UsuarioController {
 	}
 	
 	
-	@CircuitBreaker(name = "carrosCB", fallbackMethod = "fallBackGetCarro")
+	//@CircuitBreaker(name = "carrosCB", fallbackMethod = "fallBackGetCarro")
 	@GetMapping("/carro/{id}")
 	public ResponseEntity<Carro> obtenerCarroById(@PathVariable int id){
 		log.info("obtenerCarroById");
@@ -61,7 +81,7 @@ public class UsuarioController {
 	}
 	
 	@PostMapping("/carroService/{usuarioId}")
-	public ResponseEntity<Carro> guardarCarro(@PathVariable int usuarioId,@RequestBody Carro carro){
+	public ResponseEntity<Carro> guardarCarro(@PathVariable int usuarioId,@Valid @RequestBody Carro carro){
 		Carro nuevoCarro = usuarioService.saveCarro(usuarioId, carro);
 		return new ResponseEntity<Carro>(nuevoCarro,HttpStatus.OK);
 	}

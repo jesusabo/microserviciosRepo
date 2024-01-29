@@ -19,10 +19,10 @@ import com.carro.service.servicio.CarroService;
 
 @RestController
 @RequestMapping("/carro")
-public class CarroController {
+public class CarroController{
 	
-	private static final Logger log = org.slf4j.LoggerFactory.getLogger(CarroController.class);
-
+	protected static final Logger log = org.slf4j.LoggerFactory.getLogger(CarroController.class);
+	
 	@Autowired
 	private CarroService carroService;
 	
@@ -30,7 +30,7 @@ public class CarroController {
 	@PostMapping("/guardar")
 	public ResponseEntity<Carro> guardarCarro(@RequestBody Carro carro){
 		log.info("guardar carro ID");
-		return new ResponseEntity<>(carroService.save(carro),HttpStatus.OK);
+		return new ResponseEntity<>(carroService.saveCarro(carro),HttpStatus.OK);
 	}
 	
 	@GetMapping("/obtener/{id}")
@@ -43,8 +43,19 @@ public class CarroController {
 	@GetMapping("/listar")
 	public ResponseEntity<List<Carro>> listarCarro(){
 		log.info("obtener lista de carros");
-		List<Carro> carros = carroService.getAll();
+		List<Carro> carros = carroService.getCarroAll();
 		return new ResponseEntity<List<Carro>>(carros,HttpStatus.OK);
+	}
+	
+	@PostMapping("/actualizar")
+	public ResponseEntity<Carro> actualizarCarro(@RequestBody Carro carro){
+		return new ResponseEntity<>(carroService.updateCarro(carro),HttpStatus.OK);
+	}
+	
+	@GetMapping("/eliminar/{id}")
+	public ResponseEntity<Void> eliminarCarro(@PathVariable int id){
+		carroService.deleteCarro(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 }

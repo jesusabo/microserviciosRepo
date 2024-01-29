@@ -2,17 +2,21 @@ package com.usuario.service.servicio;
 
 import java.util.List;
 
+import com.usuario.service.dto.Carro;
+import com.usuario.service.dto.Moto;
 import com.usuario.service.entity.Usuario;
-import com.usuario.service.modelos.Carro;
-import com.usuario.service.modelos.Moto;
 
 public interface UsuarioService {	
 	
-	List<Usuario> getAll();
+	List<Usuario> getUsuarioAll();
 	
 	Usuario getUsuarioById(int id);
 	
-	Usuario save(Usuario usuario);
+	Usuario saveUsuario(Usuario usuario);
+	
+	Usuario updateUsuario(Usuario usuario);
+	
+	void deleteUsuario(int idUsuario);
 	
 	List<Carro> getCarros();
 	

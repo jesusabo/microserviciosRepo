@@ -84,6 +84,15 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
 		</dependency>
+		
+		
+		
+		<dependency>
+			<groupId>carro-service</groupId>
+			<artifactId>carro-service</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

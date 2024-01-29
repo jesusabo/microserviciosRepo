@@ -1,21 +1,28 @@
 package com.usuario.service.servicio.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.usuario.service.dto.Carro;
+import com.usuario.service.dto.Moto;
 import com.usuario.service.entity.Usuario;
+import com.usuario.service.excepciones.ResourceNotFoundException;
 import com.usuario.service.feignClients.CarroFeignClient;
-import com.usuario.service.modelos.Carro;
-import com.usuario.service.modelos.Moto;
 import com.usuario.service.repository.UsuarioRepository;
 import com.usuario.service.servicio.UsuarioService;
 
@@ -36,18 +43,35 @@ public class UsuarioServiceImpl implements UsuarioService{
 	private CarroFeignClient carroFeignClient;
 
 	@Override
-	public List<Usuario> getAll() {
-		return usuarioRepository.findAll();
+	public List<Usuario> getUsuarioAll() {
+		log.info("getAll");
+		Sort sort = Sort.by("id").ascending();
+		Pageable pageable = PageRequest.of(0,5,sort);
+		Page<Usuario> usuarios = usuarioRepository.findAll(pageable);		
+		return usuarios.getContent();
 	}
 
 	@Override
 	public Usuario getUsuarioById(int id) {
-		return usuarioRepository.findById(id).get();
+		return usuarioRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Usuario", "id", id));
 	}
 
 	@Override
-	public Usuario save(Usuario usuario) {
+	public Usuario saveUsuario(Usuario usuario) {
 		return usuarioRepository.save(usuario);
+	}
+	
+	@Override
+	public Usuario updateUsuario(Usuario usuario) {
+		Usuario user = usuarioRepository.findById(usuario.getId()).orElseThrow(()->new ResourceNotFoundException("Usuario", "id", usuario.getId()));
+		user.setNombre(usuario.getNombre());
+		usuarioRepository.save(user);
+		return usuario;
+	}
+
+	@Override
+	public void deleteUsuario(int idUsuario) {
+		usuarioRepository.deleteById(idUsuario);	
 	}
 	
 	@Override
@@ -60,9 +84,19 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Override
 	public Carro getCarro(int id) {
 		log.info("getCarro");
-		Carro carro =  restTemplate.getForObject("http://carro-service/carro/obtener/"+ id, Carro.class);
-//		Carro carro =  restTemplate.getForObject("http://localhost:8081/carro/obtener/{id}", Carro.class,id);
-		return carro;
+		try {
+			ResponseEntity<Carro> carroResponse = restTemplate.getForEntity("http://carro-service/carro/obtener/"+ id, Carro.class);
+			return carroResponse.getBody();			
+		} catch (HttpServerErrorException errorException) {
+			log.info("En HttpServerErrorException");
+			throw new ResourceNotFoundException(errorException.getMessage());
+		} catch (Exception e) {
+			log.info("En Exception General");
+			log.info("-- "+e.getMessage());
+			return null;
+		}
+		
+			
 	}
 
 	@Override
@@ -110,5 +144,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 		Moto[] moto = restTemplate.getForObject("http://moto-service/moto/listar", Moto[].class);
 		return Arrays.asList(moto);
 	}
+
+	
 
 }
