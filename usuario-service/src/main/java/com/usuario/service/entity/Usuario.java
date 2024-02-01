@@ -13,6 +13,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.usuario.service.dto.UsuarioDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,17 +28,26 @@ public class Usuario {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	@NotEmpty(message = "El nombre no debe ser vacio")
-	@Size(min = 8, message = "El  nombre debe tener al menos 3 caracteres")
+	private Integer id;	
+
 	private String nombre;
 	
-	@Email(message = "El email debe tener un formato correcto")
-	private String email;
+	private String apellido;
 	
-	@Column(name = "fec_nac")
+	private String email;
+
 	private Date fechaNacimiento;
+
+	public Usuario(UsuarioDTO usuarioDTO) {
+		super();
+		this.nombre = usuarioDTO.getNombre();
+		this.apellido= usuarioDTO.getApellido();
+		this.email = usuarioDTO.getEmail();
+		this.fechaNacimiento = usuarioDTO.getFechaNacimiento();
+	}
+	
+	
+	
 	
 	
 

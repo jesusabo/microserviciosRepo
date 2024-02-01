@@ -76,6 +76,7 @@
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		
+		<!-- Dependencias para Zipkin y sleuth -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
@@ -87,11 +88,11 @@
 		
 		
 		
-		<dependency>
-			<groupId>carro-service</groupId>
-			<artifactId>carro-service</artifactId>
-			<version>1.0</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>carro-service</groupId> -->
+<!-- 			<artifactId>carro-service</artifactId> -->
+<!-- 			<version>1.0</version> -->
+<!-- 		</dependency> -->
 
 	</dependencies>
 
